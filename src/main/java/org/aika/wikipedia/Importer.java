@@ -1,6 +1,7 @@
 package org.aika.wikipedia;
 
 import org.aika.Model;
+import org.aika.Provider;
 import org.aika.corpus.Document;
 import org.aika.corpus.Range;
 import org.aika.storage.MongoSuspensionHook;
@@ -71,7 +72,7 @@ public class Importer implements CommandLineRunner {
 
 
         System.out.println("Suspend All");
-        aikaModel.suspendAll();
+        aikaModel.suspendAll(Provider.SuspensionMode.SAVE);
     }
 
 

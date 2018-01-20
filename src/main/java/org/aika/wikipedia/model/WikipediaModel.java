@@ -2,24 +2,23 @@ package org.aika.wikipedia.model;
 
 
 import org.aika.ActivationFunction;
-import org.aika.Input;
+import org.aika.neuron.Activation;
+import org.aika.neuron.Synapse;
 import org.aika.Model;
 import org.aika.Neuron;
 import org.aika.corpus.Document;
-import org.aika.corpus.InterprNode;
+import org.aika.corpus.InterpretationNode;
 import org.aika.corpus.Range;
 import org.aika.corpus.Range.Relation;
 import org.aika.corpus.Range.Operator;
 import org.aika.lattice.AndNode;
 import org.aika.neuron.INeuron;
 import org.aika.storage.NeuronRepository;
-import org.aika.training.MetaInput;
+import org.aika.training.MetaSynapse;
 import org.aika.training.MetaNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.aika.corpus.Range.Mapping.BEGIN;
-import static org.aika.corpus.Range.Mapping.END;
 
 @Component
 public class WikipediaModel {
@@ -65,13 +64,13 @@ public class WikipediaModel {
         topicMetaN = neuronRepository.lookupNeuronProvider("M-TOPIC");
 
         MetaNetwork.initMetaNeuron(aikaModel, phraseMetaN, 5.0, 5.0,
-                new Input()
+                new Synapse.Builder()
                         .setNeuron(phraseN)
                         .setWeight(40.0)
                         .setBias(-40.0)
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(20.0)
                         .setMetaBias(-20.0)
                         .setMetaRelativeRid(true)
@@ -81,7 +80,7 @@ public class WikipediaModel {
                         .setRelativeRid(0)
                         .setRangeMatch(Operator.EQUALS, Operator.GREATER_THAN_EQUAL)
                         .setRangeOutput(true, false),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(20.0)
                         .setMetaBias(-20.0)
                         .setMetaRelativeRid(true)
@@ -91,7 +90,7 @@ public class WikipediaModel {
                         .setRelativeRid(null)
                         .setRangeMatch(Operator.LESS_THAN_EQUAL, Operator.EQUALS)
                         .setRangeOutput(false, true),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(10.0)
                         .setMetaBias(-10.0)
                         .setMetaRelativeRid(true)
@@ -101,7 +100,7 @@ public class WikipediaModel {
                         .setRelativeRid(null)
                         .setRangeMatch(Operator.LESS_THAN, Operator.GREATER_THAN)
                         .setRangeOutput(false, false),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(-100.0)
                         .setMetaBias(0.0)
                         .setNeuron(phraseSuppr)
@@ -113,13 +112,13 @@ public class WikipediaModel {
         );
 
         MetaNetwork.initMetaNeuron(aikaModel, entityMetaN, 5.0, 5.0,
-                new Input()
+                new Synapse.Builder()
                         .setNeuron(phraseN)
                         .setWeight(40.0)
                         .setBias(-40.0)
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(40.0)
                         .setMetaBias(-40.0)
                         .setNeuron(phraseSuppr)
@@ -127,7 +126,7 @@ public class WikipediaModel {
                         .setBias(-40.0)
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(2.0)
                         .setMetaBias(-1.0)
                         .setNeuron(topicSuppr)
@@ -136,7 +135,7 @@ public class WikipediaModel {
                         .setRelativeRid(null)
                         .setRangeMatch(Relation.CONTAINED_IN)
                         .setRangeOutput(false),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(-100.0)
                         .setMetaBias(0.0)
                         .setNeuron(entitySuppr)
@@ -148,7 +147,7 @@ public class WikipediaModel {
         );
 
         MetaNetwork.initMetaNeuron(aikaModel, topicMetaN, 5.0, 5.0,
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(500.0)
                         .setMetaBias(-500.0)
                         .setNeuron(documentN)
@@ -156,7 +155,7 @@ public class WikipediaModel {
                         .setBias(-500.0)
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true),
-                new MetaInput()
+                new MetaSynapse.Builder()
                         .setMetaWeight(2.0)
                         .setMetaBias(-1.0)
                         .setNeuron(entitySuppr)
@@ -164,7 +163,7 @@ public class WikipediaModel {
                         .setBias(-10.0)
                         .setRangeMatch(Relation.CONTAINS)
                         .setRangeOutput(false),
-                new Input()
+                new Synapse.Builder()
                         .setNeuron(topicSuppr)
                         .setWeight(-100.0)
                         .setBias(0.0)
@@ -173,8 +172,8 @@ public class WikipediaModel {
                         .setRangeOutput(false)
         );
 
-        aikaModel.addSynapse(phraseSuppr,
-                new MetaInput()
+        phraseSuppr.addSynapse(
+                new MetaSynapse.Builder()
                         .setMetaWeight(1.0)
                         .setMetaBias(0.0)
                         .setNeuron(phraseMetaN)
@@ -186,12 +185,12 @@ public class WikipediaModel {
         );
 
 
-        aikaModel.initNeuron(wordSuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY);
+        Neuron.init(wordSuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY);
 
-        aikaModel.initNeuron(phraseSuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY);
+        Neuron.init(phraseSuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY);
 
-        aikaModel.initNeuron(entitySuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY,
-                new MetaInput()
+        Neuron.init(entitySuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY,
+                new MetaSynapse.Builder()
                         .setMetaWeight(1.0)
                         .setMetaBias(0.0)
                         .setNeuron(entityMetaN)
@@ -202,8 +201,8 @@ public class WikipediaModel {
                         .setRangeOutput(true)
         );
 
-        aikaModel.initNeuron(topicSuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY,
-                new MetaInput()
+        Neuron.init(topicSuppr, 0.0, ActivationFunction.RECTIFIED_LINEAR_UNIT_KEY, INeuron.Type.INHIBITORY,
+                new MetaSynapse.Builder()
                         .setMetaWeight(1.0)
                         .setMetaBias(0.0)
                         .setNeuron(topicMetaN)
@@ -239,8 +238,8 @@ public class WikipediaModel {
 
         n = neuronRepository.lookupNeuronProvider(key);
 
-        aikaModel.addSynapse(suppr,
-                new Input()
+        suppr.addSynapse(
+                new Synapse.Builder()
                         .setNeuron(n)
                         .setWeight(1.0)
                         .setBias(0.0)
@@ -256,19 +255,29 @@ public class WikipediaModel {
     public void processEntity(Document doc, int b, int e, String entity) {
         phraseN.addInput(doc, b, e);
 
-        InterprNode pin = InterprNode.addPrimitive(doc);
-        pin.fixed = true;
+        InterpretationNode pin = InterpretationNode.addPrimitive(doc);
         Neuron n = lookupEntityNeuron(entity);
-        n.addInput(doc, b, e, null, pin, 1.0, 1.0);
+        n.addInput(doc,
+                new Activation.Builder()
+                        .setRange(b, e)
+                        .setInterpretation(pin)
+                        .setValue(1.0)
+                        .setTargetValue(1.0)
+        );
     }
 
 
     public void processTopic(Document doc, String topic) {
-        InterprNode pin = InterprNode.addPrimitive(doc);
-        pin.fixed = true;
+        InterpretationNode pin = InterpretationNode.addPrimitive(doc);
 
         Neuron tn = lookupTopicNeuron(topic);
-        tn.addInput(doc, 0, doc.length(), null, pin, 1.0, 1.0);
+        tn.addInput(doc,
+                new Activation.Builder()
+                        .setRange(0, doc.length())
+                        .setInterpretation(pin)
+                        .setValue(1.0)
+                        .setTargetValue(1.0)
+        );
     }
 
 

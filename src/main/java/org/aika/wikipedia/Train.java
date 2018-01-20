@@ -2,8 +2,7 @@ package org.aika.wikipedia;
 
 import org.aika.*;
 import org.aika.corpus.Document;
-import org.aika.corpus.Document.DiscoveryConfig;
-import org.aika.corpus.Document.TrainConfig;
+import org.aika.training.PatternDiscovery;
 import org.aika.corpus.Range;
 import org.aika.lattice.*;
 import org.aika.neuron.Activation;
@@ -42,8 +41,8 @@ public class Train {
 
     public volatile int numberOfPositions;
 
-    DiscoveryConfig discoveryConfig;
-    TrainConfig trainConfig;
+    PatternDiscovery.Config discoveryConfig;
+    SupervisedTraining.Config trainConfig;
 
     long visitedCounter = 0;
 
@@ -61,34 +60,37 @@ public class Train {
 
     @PostConstruct
     public void init() {
-        Converter.REMOVE_SYNAPSES_WITH_INVERTED_SIGNS = true;
 
         aikaModel.setNodeStatisticFactory(() -> new NodeStatistic(numberOfPositions));
         aikaModel.setNeuronStatisticFactory(() -> new NeuronStatistic(numberOfPositions));
 
-        supprN = aikaModel.initNeuron(aikaModel.createNeuron("SUPPR"), 0.0, INeuron.Type.INHIBITORY);
+        supprN = Neuron.init(aikaModel.createNeuron("SUPPR"), 0.0, INeuron.Type.INHIBITORY);
 
-        this.discoveryConfig = new DiscoveryConfig()
+        this.discoveryConfig = new PatternDiscovery.Config()
                 .setCounter(act -> countPattern(act))
                 .setCheckExpandable(act -> checkExpandable(act))
                 .setCheckValidPattern(n -> evaluate(n));
 
 
-        trainConfig = new TrainConfig()
+        trainConfig = new SupervisedTraining.Config()
                 .setLearnRate(0.2)
                 .setPerformBackpropagation(true)
-                .setSynapseEvaluation((iAct, oAct) -> synapseEval(iAct, oAct));
+                .setSynapseEvaluation((s, iAct, oAct) -> synapseEval(iAct, oAct));
 
     }
 
 
-    private Document.SynEvalResult synapseEval(Activation iAct, Activation oAct) {
+    private SynapseEvaluation.Result synapseEval(Activation iAct, Activation oAct) {
         if (StringUtils.startsWith(iAct.key.node.neuron.get().label, "E-") &&
                 StringUtils.startsWith(oAct.key.node.neuron.get().label, "T-")) {
-            return new Document.SynEvalResult(DEFAULT_TOPIC_SYNAPSE_KEY, SynapseSignificance.sig(iAct, oAct));
+            return new SynapseEvaluation.Result(DEFAULT_TOPIC_SYNAPSE_KEY, sig(iAct, oAct), false);
         }
 
         return null;
+    }
+
+    private double sig(Activation iAct, Activation oAct) {
+        return 0.0;
     }
 
 
@@ -111,11 +113,13 @@ public class Train {
 
         countNeurons(doc);
 
-        InterprSupprTraining.train(doc, InterprSupprTraining.LEARN_RATE);
+        InterprSupprTraining.train(doc, new InterprSupprTraining.Config().setLearnRate(0.5));
 
-        doc.train(trainConfig);
+        doc.supervisedTraining.train(trainConfig);
 
-        LongTermPotAndDep.train(doc);
+        LongTermLearning.train(doc,
+                new LongTermLearning.Config()
+        );
 
         doc.commit();
 
