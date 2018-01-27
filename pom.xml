@@ -41,7 +41,7 @@
                     <encoding>utf-8</encoding>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -58,6 +58,11 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.aika-software</groupId>
+            <artifactId>aika</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.aika-software</groupId>
@@ -136,6 +141,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.aika-software</groupId>
+                <artifactId>aika</artifactId>
+                <version>0.14-SNAPSHOT</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.aika-software</groupId>
                 <artifactId>aika-storage</artifactId>
