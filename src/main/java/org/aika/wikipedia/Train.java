@@ -83,7 +83,7 @@ public class Train {
     private SynapseEvaluation.Result synapseEval(Activation iAct, Activation oAct) {
         if (StringUtils.startsWith(iAct.key.node.neuron.get().label, "E-") &&
                 StringUtils.startsWith(oAct.key.node.neuron.get().label, "T-")) {
-            return new SynapseEvaluation.Result(DEFAULT_TOPIC_SYNAPSE_KEY, sig(iAct, oAct), false);
+            return new SynapseEvaluation.Result(DEFAULT_TOPIC_SYNAPSE_KEY, sig(iAct, oAct), SynapseEvaluation.DeleteMode.NONE);
         }
 
         return null;
