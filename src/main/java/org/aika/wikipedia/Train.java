@@ -116,7 +116,6 @@ public class Train {
 //        MetaNetwork.train(doc);
 
         countNeurons(doc);
-        log.info(doc.neuronActivationsToString(true, true, true));
 
 //        InterprSupprTraining.train(doc, new InterprSupprTraining.Config().setLearnRate(0.5));
 
