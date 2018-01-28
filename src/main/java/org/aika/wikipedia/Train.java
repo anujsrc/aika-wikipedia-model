@@ -13,6 +13,8 @@ import org.aika.training.*;
 import org.aika.wikipedia.importer.NodeStatistic;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.distribution.BinomialDistribution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,8 @@ import java.util.*;
 
 @Component
 public class Train {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private static double SIGNIFICANCE_THRESHOLD = 0.98;
 
@@ -109,20 +113,21 @@ public class Train {
         visitedCounter++;
         numberOfPositions += doc.length();
 
-        MetaNetwork.train(doc);
+//        MetaNetwork.train(doc);
 
         countNeurons(doc);
+        log.info(doc.neuronActivationsToString(true, true, true));
 
-        InterprSupprTraining.train(doc, new InterprSupprTraining.Config().setLearnRate(0.5));
+//        InterprSupprTraining.train(doc, new InterprSupprTraining.Config().setLearnRate(0.5));
 
-        doc.supervisedTraining.train(trainConfig);
+/*        doc.supervisedTraining.train(trainConfig);
 
         LongTermLearning.train(doc,
                 new LongTermLearning.Config()
         );
 
         doc.commit();
-
+*/
 /*        doc.discoverPatterns(discoveryConfig);
 
 
