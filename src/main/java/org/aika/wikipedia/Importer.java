@@ -135,7 +135,7 @@ public class Importer implements CommandLineRunner {
 
             log.info(doc.bestInterpretationToString());
 
-            log.info(doc.neuronActivationsToString(true, true, false));
+            log.info(doc.activationsToString(true, false));
         } catch (Exception e) {
             doc.clearActivations();
             throw e;

@@ -5,7 +5,7 @@ import org.aika.ActivationFunction;
 import org.aika.neuron.Activation;
 import org.aika.neuron.Synapse;
 import org.aika.Model;
-import org.aika.Neuron;
+import org.aika.neuron.Neuron;
 import org.aika.corpus.Document;
 import org.aika.corpus.InterpretationNode;
 import org.aika.corpus.Range;

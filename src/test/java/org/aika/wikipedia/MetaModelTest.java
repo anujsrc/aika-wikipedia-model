@@ -50,12 +50,12 @@ public class MetaModelTest implements InitializingBean {
 
         doc.process();
 
-        System.out.println(doc.neuronActivationsToString(true, true, true));
+        System.out.println(doc.activationsToString(true, true));
         System.out.println(doc.bestInterpretationToString());
 
         MetaNetwork.train(doc);
 
-        System.out.println(doc.neuronActivationsToString(true, true, true));
+        System.out.println(doc.activationsToString(true, true));
 
     }
 }

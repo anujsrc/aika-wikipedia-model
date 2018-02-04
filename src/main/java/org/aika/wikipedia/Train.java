@@ -6,6 +6,7 @@ import org.aika.training.PatternDiscovery;
 import org.aika.corpus.Range;
 import org.aika.lattice.*;
 import org.aika.neuron.Activation;
+import org.aika.neuron.Neuron;
 import org.aika.neuron.INeuron;
 import org.aika.neuron.Synapse;
 import org.aika.storage.NeuronRepository;
@@ -116,7 +117,7 @@ public class Train {
 //        MetaNetwork.train(doc);
 
         countNeurons(doc);
-        log.info(doc.neuronActivationsToString(true, true, true));
+        log.info(doc.activationsToString(true, true));
 
 //        InterprSupprTraining.train(doc, new InterprSupprTraining.Config().setLearnRate(0.5));
 
