@@ -33,14 +33,14 @@ public class WikipediaModel {
     public Neuron upperCaseN;
     public Neuron documentN;
     public Neuron phraseN;
-/*    public Neuron wordSuppr;
+    public Neuron wordSuppr;
     public Neuron phraseSuppr;
     public Neuron entitySuppr;
     public Neuron topicSuppr;
     public Neuron phraseMetaN;
     public Neuron entityMetaN;
     public Neuron topicMetaN;
-*/
+
 
     public void init() {
         aikaModel.setAndNodeCheck(n -> {
@@ -53,7 +53,7 @@ public class WikipediaModel {
         upperCaseN = neuronRepository.lookupNeuronProvider("UPPER CASE");
         documentN = neuronRepository.lookupNeuronProvider("DOCUMENT");
         phraseN = neuronRepository.lookupNeuronProvider("PHRASE");
-/*
+
         wordSuppr = neuronRepository.lookupNeuronProvider("S-WORD");
         phraseSuppr = neuronRepository.lookupNeuronProvider("S-PHRASE");
         entitySuppr = neuronRepository.lookupNeuronProvider("S-ENTITY");
@@ -130,6 +130,7 @@ public class WikipediaModel {
                         .setMetaWeight(2.0)
                         .setMetaBias(-1.0)
                         .setNeuron(topicSuppr)
+                        .setRecurrent(true)
                         .setWeight(0.0)
                         .setBias(0.0)
                         .setRelativeRid(null)
@@ -212,24 +213,24 @@ public class WikipediaModel {
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true)
         );
-*/
+
     }
 
 
     public Neuron lookupWordNeuron(String word) {
-        return lookupNeuron(null /*wordSuppr*/, word);
+        return lookupNeuron(wordSuppr, word);
     }
 
 
     public Neuron lookupEntityNeuron(String entity) {
-        return lookupNeuron(null /*entitySuppr*/, entity);
+        return lookupNeuron(entitySuppr, entity);
     }
 
-/*
+
     public Neuron lookupTopicNeuron(String topic) {
         return lookupNeuron(topicSuppr, topic);
     }
-*/
+
 
     private Neuron lookupNeuron(Neuron suppr, String key) {
         Neuron n = neuronRepository.getNeuronProvider(key);
@@ -238,7 +239,7 @@ public class WikipediaModel {
         }
 
         n = neuronRepository.lookupNeuronProvider(key);
-/*
+
         suppr.addSynapse(
                 new Synapse.Builder()
                         .setNeuron(n)
@@ -248,7 +249,7 @@ public class WikipediaModel {
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true)
         );
-*/
+
         return n;
     }
 
@@ -269,7 +270,7 @@ public class WikipediaModel {
 
 
     public void processTopic(Document doc, String topic) {
-/*        InterpretationNode pin = InterpretationNode.addPrimitive(doc);
+        InterpretationNode pin = InterpretationNode.addPrimitive(doc);
 
         Neuron tn = lookupTopicNeuron(topic);
         tn.addInput(doc,
@@ -278,7 +279,7 @@ public class WikipediaModel {
                         .setInterpretation(pin)
                         .setValue(1.0)
                         .setTargetValue(1.0)
-        );*/
+        );
     }
 
 
