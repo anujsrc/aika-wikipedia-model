@@ -133,8 +133,6 @@ public class Importer implements CommandLineRunner {
             doc.process();
             log.info("Finished search for best interpretation");
 
-            log.info(doc.bestInterpretationToString());
-
             log.info(doc.activationsToString(true, false));
         } catch (Exception e) {
             doc.clearActivations();
