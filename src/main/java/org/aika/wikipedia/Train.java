@@ -114,7 +114,7 @@ public class Train {
         visitedCounter++;
         numberOfPositions += doc.length();
 
-//        MetaNetwork.train(doc);
+        MetaNetwork.train(doc);
 
         countNeurons(doc);
         log.info(doc.activationsToString(true, true));
