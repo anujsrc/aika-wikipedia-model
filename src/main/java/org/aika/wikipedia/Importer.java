@@ -4,6 +4,7 @@ import org.aika.Model;
 import org.aika.Provider;
 import org.aika.corpus.Document;
 import org.aika.corpus.Range;
+import org.aika.neuron.Activation;
 import org.aika.storage.MongoSuspensionHook;
 import org.aika.wikipedia.importer.Annotation;
 import org.aika.wikipedia.importer.WikipediaImporter;
@@ -83,6 +84,9 @@ public class Importer implements CommandLineRunner {
 
         try {
             wikiModel.documentN.addInput(doc, 0, doc.length());
+            if(wikiDoc.keywordAnnotation != null) {
+                wikiModel.articleKeywordN.addInput(doc, wikiDoc.keywordAnnotation.r.begin, wikiDoc.keywordAnnotation.r.end + 1);
+            }
 
             for (Annotation anno : wikiDoc.annotations) {
                 for (String attr : anno.attributes) {

@@ -29,7 +29,7 @@ public class WikipediaModel {
     @Autowired
     NeuronRepository neuronRepository;
 
-
+    public Neuron articleKeywordN;
     public Neuron upperCaseN;
     public Neuron documentN;
     public Neuron phraseN;
@@ -50,6 +50,7 @@ public class WikipediaModel {
             return true;
         });
 
+        articleKeywordN = neuronRepository.lookupNeuronProvider("ARTICLE-KEYWORD");
         upperCaseN = neuronRepository.lookupNeuronProvider("UPPER CASE");
         documentN = neuronRepository.lookupNeuronProvider("DOCUMENT");
         phraseN = neuronRepository.lookupNeuronProvider("PHRASE");
@@ -70,6 +71,11 @@ public class WikipediaModel {
                         .setBias(-40.0)
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true),
+                new Synapse.Builder()
+                        .setNeuron(articleKeywordN)
+                        .setWeight(40.0)
+                        .setBias(-40.0)
+                        .setRangeMatch(Relation.EQUALS),
                 new MetaSynapse.Builder()
                         .setMetaWeight(20.0)
                         .setMetaBias(-20.0)
@@ -118,6 +124,11 @@ public class WikipediaModel {
                         .setBias(-40.0)
                         .setRangeMatch(Relation.EQUALS)
                         .setRangeOutput(true),
+                new Synapse.Builder()
+                        .setNeuron(articleKeywordN)
+                        .setWeight(40.0)
+                        .setBias(-40.0)
+                        .setRangeMatch(Relation.EQUALS),
                 new MetaSynapse.Builder()
                         .setMetaWeight(40.0)
                         .setMetaBias(-40.0)
