@@ -90,14 +90,14 @@ public class Importer implements CommandLineRunner {
 
             for (Annotation anno : wikiDoc.annotations) {
                 for (String attr : anno.attributes) {
-
+/*
                     if(attr.startsWith("E-")) {
                         int b = anno.r.begin;
                         int e = (anno.r.end < doc.length() && doc.getContent().charAt(anno.r.end) == ' ') ? anno.r.end + 1 : anno.r.end;
 
                         wikiModel.processEntity(doc, b, e, attr);
                     }
-
+*/
                     if(attr.equals("ARTICLE-KEYWORD")) {
                         for(String a: anno.attributes) {
                             if (a.startsWith("E-") || a.startsWith("C-")) {

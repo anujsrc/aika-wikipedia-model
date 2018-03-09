@@ -35,7 +35,6 @@ public class MetaModelTest implements InitializingBean {
         Document doc = model.aikaModel.createDocument("aaaa bbbbb cccc ddddd eee ");
 
         model.documentN.addInput(doc, 0, doc.getContent().length());
-        model.phraseN.addInput(doc, 5, 22);
 
         model.processEntity(doc, 5, 22, "E-XXX");
         model.processTopic(doc, "T-YYY");

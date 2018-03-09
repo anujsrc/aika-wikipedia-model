@@ -32,7 +32,6 @@ public class WikipediaModel {
     public Neuron articleKeywordN;
     public Neuron upperCaseN;
     public Neuron documentN;
-    public Neuron phraseN;
     public Neuron wordSuppr;
     public Neuron phraseSuppr;
     public Neuron entitySuppr;
@@ -53,7 +52,6 @@ public class WikipediaModel {
         articleKeywordN = neuronRepository.lookupNeuronProvider("ARTICLE-KEYWORD");
         upperCaseN = neuronRepository.lookupNeuronProvider("UPPER CASE");
         documentN = neuronRepository.lookupNeuronProvider("DOCUMENT");
-        phraseN = neuronRepository.lookupNeuronProvider("PHRASE");
 
         wordSuppr = neuronRepository.lookupNeuronProvider("S-WORD");
         phraseSuppr = neuronRepository.lookupNeuronProvider("S-PHRASE");
@@ -64,18 +62,13 @@ public class WikipediaModel {
         entityMetaN = neuronRepository.lookupNeuronProvider("M-ENTITY");
         topicMetaN = neuronRepository.lookupNeuronProvider("M-TOPIC");
 
-        MetaNetwork.initMetaNeuron(aikaModel, phraseMetaN, 5.0, 5.0,
-                new Synapse.Builder()
-                        .setNeuron(phraseN)
-                        .setWeight(40.0)
-                        .setBias(-40.0)
-                        .setRangeMatch(Relation.EQUALS)
-                        .setRangeOutput(true),
+        MetaNetwork.initMetaNeuron(aikaModel, phraseMetaN, 4.0, 6.0,
                 new Synapse.Builder()
                         .setNeuron(articleKeywordN)
                         .setWeight(40.0)
                         .setBias(-40.0)
-                        .setRangeMatch(Relation.EQUALS),
+                        .setRangeMatch(Relation.EQUALS)
+                        .setRangeOutput(true),
                 new MetaSynapse.Builder()
                         .setMetaWeight(20.0)
                         .setMetaBias(-20.0)
@@ -117,18 +110,13 @@ public class WikipediaModel {
                         .setRangeMatch(Relation.OVERLAPS)
         );
 
-        MetaNetwork.initMetaNeuron(aikaModel, entityMetaN, 5.0, 5.0,
-                new Synapse.Builder()
-                        .setNeuron(phraseN)
-                        .setWeight(40.0)
-                        .setBias(-40.0)
-                        .setRangeMatch(Relation.EQUALS)
-                        .setRangeOutput(true),
+        MetaNetwork.initMetaNeuron(aikaModel, entityMetaN, 5.0, 10.0,
                 new Synapse.Builder()
                         .setNeuron(articleKeywordN)
                         .setWeight(40.0)
                         .setBias(-40.0)
-                        .setRangeMatch(Relation.EQUALS),
+                        .setRangeMatch(Relation.EQUALS)
+                        .setRangeOutput(true),
                 new MetaSynapse.Builder()
                         .setMetaWeight(40.0)
                         .setMetaBias(-40.0)
@@ -266,8 +254,6 @@ public class WikipediaModel {
 
 
     public void processEntity(Document doc, int b, int e, String entity) {
-        phraseN.addInput(doc, b, e);
-
         InterpretationNode pin = InterpretationNode.addPrimitive(doc);
         Neuron n = lookupEntityNeuron(entity);
         n.addInput(doc,
