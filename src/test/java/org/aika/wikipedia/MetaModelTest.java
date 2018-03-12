@@ -1,7 +1,7 @@
 package org.aika.wikipedia;
 
 
-import org.aika.corpus.Document;
+import org.aika.Document;
 import org.aika.training.MetaNetwork;
 import org.aika.wikipedia.config.TestConfig;
 import org.aika.wikipedia.model.WikipediaModel;
@@ -49,11 +49,11 @@ public class MetaModelTest implements InitializingBean {
 
         doc.process();
 
-        System.out.println(doc.activationsToString(true, true));
+        System.out.println(doc.activationsToString(true, true, true));
 
         MetaNetwork.train(doc);
 
-        System.out.println(doc.activationsToString(true, true));
+        System.out.println(doc.activationsToString(true, true, true));
 
     }
 }

@@ -2,9 +2,9 @@ package org.aika.wikipedia;
 
 import org.aika.Model;
 import org.aika.Provider;
-import org.aika.corpus.Document;
-import org.aika.corpus.Range;
-import org.aika.neuron.Activation;
+import org.aika.Document;
+import org.aika.neuron.activation.Range;
+import org.aika.neuron.activation.Activation;
 import org.aika.storage.MongoSuspensionHook;
 import org.aika.wikipedia.importer.Annotation;
 import org.aika.wikipedia.importer.WikipediaImporter;
@@ -137,7 +137,7 @@ public class Importer implements CommandLineRunner {
             doc.process();
             log.info("Finished search for best interpretation");
 
-            log.info(doc.activationsToString(true, false));
+            log.info(doc.activationsToString(true, true, false));
         } catch (Exception e) {
             doc.clearActivations();
             throw e;

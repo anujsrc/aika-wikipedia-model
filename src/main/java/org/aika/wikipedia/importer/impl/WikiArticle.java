@@ -1,7 +1,7 @@
 package org.aika.wikipedia.importer.impl;
 
 
-import org.aika.corpus.Range;
+import org.aika.neuron.activation.Range;
 import org.aika.wikipedia.importer.Annotation;
 import org.apache.commons.lang3.StringEscapeUtils;
 

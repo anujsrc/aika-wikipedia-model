@@ -1,11 +1,11 @@
 package org.aika.wikipedia;
 
 import org.aika.*;
-import org.aika.corpus.Document;
+import org.aika.Document;
 import org.aika.training.PatternDiscovery;
-import org.aika.corpus.Range;
+import org.aika.neuron.activation.Range;
+import org.aika.neuron.activation.Activation;
 import org.aika.lattice.*;
-import org.aika.neuron.Activation;
 import org.aika.neuron.Neuron;
 import org.aika.neuron.INeuron;
 import org.aika.neuron.Synapse;
@@ -117,7 +117,7 @@ public class Train {
         MetaNetwork.train(doc);
 
         countNeurons(doc);
-        log.info(doc.activationsToString(true, true));
+        log.info(doc.activationsToString(true, true, true));
 
 //        InterprSupprTraining.train(doc, new InterprSupprTraining.Config().setLearnRate(0.5));
 

@@ -2,15 +2,13 @@ package org.aika.wikipedia.model;
 
 
 import org.aika.ActivationFunction;
-import org.aika.neuron.Activation;
+import org.aika.neuron.activation.Activation;
 import org.aika.neuron.Synapse;
 import org.aika.Model;
 import org.aika.neuron.Neuron;
-import org.aika.corpus.Document;
-import org.aika.corpus.InterpretationNode;
-import org.aika.corpus.Range;
-import org.aika.corpus.Range.Relation;
-import org.aika.corpus.Range.Operator;
+import org.aika.Document;
+import org.aika.neuron.activation.Range.Relation;
+import org.aika.neuron.activation.Range.Operator;
 import org.aika.lattice.AndNode;
 import org.aika.neuron.INeuron;
 import org.aika.storage.NeuronRepository;
@@ -254,12 +252,10 @@ public class WikipediaModel {
 
 
     public void processEntity(Document doc, int b, int e, String entity) {
-        InterpretationNode pin = InterpretationNode.addPrimitive(doc);
         Neuron n = lookupEntityNeuron(entity);
         n.addInput(doc,
                 new Activation.Builder()
                         .setRange(b, e)
-                        .setInterpretation(pin)
                         .setValue(1.0)
                         .setTargetValue(1.0)
         );
@@ -267,13 +263,10 @@ public class WikipediaModel {
 
 
     public void processTopic(Document doc, String topic) {
-        InterpretationNode pin = InterpretationNode.addPrimitive(doc);
-
         Neuron tn = lookupTopicNeuron(topic);
         tn.addInput(doc,
                 new Activation.Builder()
                         .setRange(0, doc.length())
-                        .setInterpretation(pin)
                         .setValue(1.0)
                         .setTargetValue(1.0)
         );

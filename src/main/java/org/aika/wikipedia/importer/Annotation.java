@@ -1,7 +1,7 @@
 package org.aika.wikipedia.importer;
 
 
-import org.aika.corpus.Range;
+import org.aika.neuron.activation.Range;
 
 import java.util.ArrayList;
 import java.util.List;
